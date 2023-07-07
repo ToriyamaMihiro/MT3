@@ -11,6 +11,7 @@ Vector3 Add(const Vector3& v1, const Vector3& v2) {
 
 	return Add;
 }
+
 Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
 	Vector3 Subtract;
 	Subtract.x = v1.x - v2.x;
@@ -21,13 +22,13 @@ Vector3 Subtract(const Vector3& v1, const Vector3& v2) {
 }
 
 //正規化
-
 float Dot(const Vector3& v1, const Vector3& v2)
 {
 	float dot;
 	dot = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 	return dot;
 }
+
 float Length(const Vector3& v)
 {
 	float Length;
@@ -43,8 +44,6 @@ float Length2(const Vector3& v)
 
 }
 
-
-
 Vector3 Normalize(const Vector3& v)
 {
 	Vector3 Normalize;
@@ -54,6 +53,7 @@ Vector3 Normalize(const Vector3& v)
 
 	return Normalize;
 }
+
 Vector3 Scaler(float scaler, const Vector3& v)
 {
 	Vector3 Multiply;
@@ -63,6 +63,16 @@ Vector3 Scaler(float scaler, const Vector3& v)
 
 	return Multiply;
 }
+
+Vector3 Perpendicular(const Vector3& vector)
+{
+	if (vector.x != 0.0f || vector.y != 0.0f) {
+		return{ -vector.y,vector.x,0.0f };
+	}
+	
+	return {0.0f,-vector.z,vector.y};
+}
+
 //アフィン変換
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {
 	Matrix4x4 MakeTranslateMatrix;
@@ -213,6 +223,8 @@ Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2)
 	Multiply.m[3][3] = (m1.m[3][0] * m2.m[0][3] + m1.m[3][1] * m2.m[1][3] + m1.m[3][2] * m2.m[2][3] + m1.m[3][3] * m2.m[3][3]);
 	return Multiply;
 }
+
+
 
 Matrix4x4 MakeAffinMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate)
 {

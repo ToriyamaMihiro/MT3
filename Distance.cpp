@@ -10,6 +10,8 @@ Vector3 Project(const Vector3& v1, const Vector3& v2)
 	return v4;
 }
 
+
+
 Vector3 ClosetPoint(const Vector3& point, const Segment& segment)
 {
 	Vector3 cp;

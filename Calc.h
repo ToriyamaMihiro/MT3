@@ -26,6 +26,7 @@ Vector3 Normalize(const Vector3& v);
 
 Vector3 Scaler(float scaler, const Vector3& v);
 
+Vector3 Perpendicular(const Vector3& vector);
 
 Matrix4x4 MakeAffinMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
 

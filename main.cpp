@@ -26,6 +26,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	sphere2.center = { 2,0,2 };
 	sphere2.radius = 1;
 
+	Plane plane;
+	plane.distance = 1;
+	plane.normal = { 0,1,0 };
+	plane.normal = Normalize(plane.normal);
+	uint32_t color=WHITE;
+
 	Vector3 v1{ 1.2f,-3.9f,2.5f };
 	Vector3 v2{ 2.8f,0.4f,-1.3f };
 
@@ -57,13 +63,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		//球体の移動
 		if (keys[DIK_W]) {
-			sphere.center.z += 0.1f;
+			sphere.center.y += 0.1f;
 		}
 		if (keys[DIK_A]) {
 			sphere.center.x -= 0.1f;
 		}
 		if (keys[DIK_S]) {
-			sphere.center.z -= 0.1f;
+			sphere.center.y -= 0.1f;
 		}
 		if (keys[DIK_D]) {
 			sphere.center.x += 0.1f;
@@ -98,13 +104,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		DrawGrid(worldViewProjectionMatrix, viewportMatrix);
-		DrawSphere(sphere, worldViewProjectionMatrix, viewportMatrix, BLACK);
-		if (!IsCollison(sphere,sphere2)) {
-			DrawSphere(sphere2, worldViewProjectionMatrix, viewportMatrix, BLACK);
+		DrawSphere(sphere, worldViewProjectionMatrix, viewportMatrix, color);
+
+		DrawPlane(plane, worldViewProjectionMatrix, viewportMatrix, WHITE);
+		if (IsCollisionSP(sphere, plane)) {
+			color = RED;
 		}
 		else {
-			DrawSphere(sphere2, worldViewProjectionMatrix, viewportMatrix, RED);
+			color = WHITE;
 		}
+
 		ImGui::Begin("Window");
 		ImGui::DragFloat3("CameraTranslate", &cameraPosition.x, 0.01f);
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);

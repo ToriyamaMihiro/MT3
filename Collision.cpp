@@ -11,7 +11,7 @@ bool IsCollisonSS(const Sphere& s1, const Sphere& s2)
 	return false;
 }
 
-bool IsCollisionSP(const Sphere& sphere, const Plane& plane)
+bool IsCollisionSpP(const Sphere& sphere, const Plane& plane)
 {
 	float k, product;
 	product = (plane.normal.x * sphere.center.x + plane.normal.y * sphere.center.y + plane.normal.z * sphere.center.z);
@@ -20,4 +20,21 @@ bool IsCollisionSP(const Sphere& sphere, const Plane& plane)
 		return true;
 	}
 	return false;
+}
+
+bool IsCollisionSeP(const Segment& segment, const Plane& plane)
+{
+	float dot = Dot(plane.normal, segment.diff);
+	if (dot == 0.0f) {//垂直＝平行なら衝突していない
+		return false;
+	}
+	float t = (plane.distance - Dot(segment.origin, plane.normal)) / dot;//t=(d-o・n)/(b・n)
+
+	
+	if (t >= 0 && t <= 1) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }

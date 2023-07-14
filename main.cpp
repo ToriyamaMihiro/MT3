@@ -30,6 +30,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	plane.distance = 1;
 	plane.normal = { 0,1,0 };
 	plane.normal = Normalize(plane.normal);
+
+	Segment segment;
+	segment.origin = { 0,0,0 };
+	segment.diff = { 1,1,1 };
 	uint32_t color=WHITE;
 
 	Vector3 v1{ 1.2f,-3.9f,2.5f };
@@ -61,18 +65,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 		Matrix4x4 viewportMatrix = MakeViewportMatrix(0, 0, float(kWindowWidth), float(kWindowHeight), 0.0f, 1.0f);
 
-		//球体の移動
+		Vector3 start = Transform(Transform(segment.origin, worldViewProjectionMatrix), viewportMatrix);
+		Vector3 end = Transform(Transform(Add(segment.origin, segment.diff), worldViewProjectionMatrix), viewportMatrix);
+		//線分の移動
 		if (keys[DIK_W]) {
-			sphere.center.y += 0.1f;
+			segment.origin.y += 0.1f;
 		}
 		if (keys[DIK_A]) {
-			sphere.center.x -= 0.1f;
+			segment.origin.x -= 0.1f;
 		}
 		if (keys[DIK_S]) {
-			sphere.center.y -= 0.1f;
+			segment.origin.y -= 0.1f;
 		}
 		if (keys[DIK_D]) {
-			sphere.center.x += 0.1f;
+			segment.origin.x += 0.1f;
 		}
 		//カメラの移動
 		if (keys[DIK_DOWN]) {
@@ -104,23 +110,33 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		///
 
 		DrawGrid(worldViewProjectionMatrix, viewportMatrix);
-		DrawSphere(sphere, worldViewProjectionMatrix, viewportMatrix, color);
 
 		DrawPlane(plane, worldViewProjectionMatrix, viewportMatrix, WHITE);
-		if (IsCollisionSP(sphere, plane)) {
+		//DrawSphere(sphere, worldViewProjectionMatrix, viewportMatrix, color);
+		// 
+		//線と平面の当たり判定
+		if (IsCollisionSeP(segment,plane)) {
+			Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), RED);
+		}
+		else {
+			Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), WHITE);
+		}
+
+		//球と平面の当たり判定
+		if (IsCollisionSpP(sphere, plane)) {
 			color = RED;
 		}
 		else {
 			color = WHITE;
 		}
 
-		ImGui::Begin("Window");
-		ImGui::DragFloat3("CameraTranslate", &cameraPosition.x, 0.01f);
+		ImGui::Begin("window");
+		ImGui::DragFloat3("CameraTranslate", &translate.x, 0.01f);
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
-		ImGui::DragFloat3("SphereCenter", &sphere.center.x, 0.01f);
-		ImGui::DragFloat3("SphereRadius", &sphere.radius, 0.01f);
-		ImGui::End();
+		ImGui::DragFloat3("Line", &segment.origin.x, 0.01f);
+		ImGui::DragFloat3("PlaneCenter", &plane.normal.x, 0.01f);
 
+		ImGui::End();
 		///
 		/// ↑描画処理ここまで
 		///

@@ -17,6 +17,16 @@ struct Plane {
 	float distance;//距離
 };
 
+struct Segment {
+	Vector3 origin;//始点
+	Vector3 diff;//終点ベクトル
+};
+
+struct Line {
+	Vector3 origin;//始点
+	Vector3 diff;//終点ベクトル
+};
+
 void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color);
 
 void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color);

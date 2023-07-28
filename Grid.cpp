@@ -36,7 +36,7 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const 
 {
 	Vector3 center = Scaler(plane.distance, plane.normal);
 	Vector3 perpendiculars[4];
-	
+
 	perpendiculars[0] = Normalize(Perpendicular(plane.normal));
 	perpendiculars[1] = { -perpendiculars[0].x,-perpendiculars[0].y,-perpendiculars[0].z };
 	perpendiculars[2] = Cross(plane.normal, perpendiculars[0]);
@@ -60,10 +60,50 @@ void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatri
 
 	for (int32_t index = 0; index < 3; ++index) {
 		point.vertices[index] = Transform(Transform(triangle.vertices[index], viewProjectionMatrix), viewportMatrix);
-	}	
+	}
 
-	Novice::DrawTriangle((int)point.vertices[0].x, (int)point.vertices[0].y, (int)point.vertices[1].x, (int)point.vertices[1].y, (int)point.vertices[2].x, (int)point.vertices[2].y,WHITE, kFillModeWireFrame);
+	Novice::DrawTriangle((int)point.vertices[0].x, (int)point.vertices[0].y, (int)point.vertices[1].x, (int)point.vertices[1].y, (int)point.vertices[2].x, (int)point.vertices[2].y, WHITE, kFillModeWireFrame);
 };
+
+void DrawAABB(const AABB& aabb, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color)
+{
+	Vector3 Vertex[8];
+	Vertex[0] = { aabb.min.x,aabb.max.y,aabb.min.z };
+	Vertex[1] = { aabb.max.x,aabb.max.y,aabb.min.z };
+	Vertex[2] = { aabb.max.x,aabb.max.y,aabb.max.z };
+	Vertex[3] = { aabb.min.x,aabb.max.y,aabb.max.z };
+	Vertex[4] = { aabb.min.x,aabb.min.y,aabb.max.z };
+	Vertex[5] = { aabb.max.x,aabb.min.y,aabb.max.z };
+	Vertex[6] = { aabb.max.x,aabb.min.y,aabb.min.z };
+	Vertex[7] = { aabb.min.x,aabb.min.y,aabb.min.z };
+
+	Vector3 worldVertices[8];
+	Vector3 screenVertices[8];
+	Vector3 ndcVertex;
+
+	for (uint32_t i = 0; i < 8; ++i) {
+		ndcVertex = Transform(Vertex[i], viewProjectionMatrix);
+		screenVertices[i] = Transform(ndcVertex, viewportMatrix);
+	}
+
+	//上の線
+	Novice::DrawLine(int(screenVertices[0].x), int(screenVertices[0].y),int(screenVertices[1].x), int(screenVertices[1].y), color);
+	Novice::DrawLine(int(screenVertices[1].x), int(screenVertices[1].y), int(screenVertices[2].x), int(screenVertices[2].y), color);
+	Novice::DrawLine(int(screenVertices[2].x), int(screenVertices[2].y), int(screenVertices[3].x), int(screenVertices[3].y), color);
+	Novice::DrawLine(int(screenVertices[3].x), int(screenVertices[3].y), int(screenVertices[0].x), int(screenVertices[0].y), color);
+	//下向きの線
+	Novice::DrawLine(int(screenVertices[0].x), int(screenVertices[0].y), int(screenVertices[7].x), int(screenVertices[7].y), color);
+	Novice::DrawLine(int(screenVertices[1].x), int(screenVertices[1].y), int(screenVertices[6].x), int(screenVertices[6].y), color);
+	Novice::DrawLine(int(screenVertices[2].x), int(screenVertices[2].y), int(screenVertices[5].x), int(screenVertices[5].y), color);
+	Novice::DrawLine(int(screenVertices[3].x), int(screenVertices[3].y), int(screenVertices[4].x), int(screenVertices[4].y), color);
+
+	//下の線
+	Novice::DrawLine(int(screenVertices[7].x), int(screenVertices[7].y), int(screenVertices[6].x), int(screenVertices[6].y), color);
+	Novice::DrawLine(int(screenVertices[6].x), int(screenVertices[6].y), int(screenVertices[5].x), int(screenVertices[5].y), color);
+	Novice::DrawLine(int(screenVertices[5].x), int(screenVertices[5].y), int(screenVertices[4].x), int(screenVertices[4].y), color);
+	Novice::DrawLine(int(screenVertices[4].x), int(screenVertices[4].y), int(screenVertices[7].x), int(screenVertices[7].y), color);
+
+}
 
 void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix)
 {
@@ -116,5 +156,6 @@ void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMa
 
 		}
 	}
-};
+}
+;
 

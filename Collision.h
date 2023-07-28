@@ -12,3 +12,5 @@ bool IsCollisionSpP(const Sphere& sphere, const Plane& plane);
 bool IsCollisionSeP(const Segment& segment, const Plane& plane);
 
 bool IsCollisionTS(const Triangle& triangle, const Segment& segment);
+
+bool IsCollisionAABB(const AABB& aabb1, const AABB& aabb2);

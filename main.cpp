@@ -41,6 +41,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	triangle.vertices[1] = { 0,1,0 };
 	triangle.vertices[2] = { 2,1,0 };
 
+	AABB aabb1;
+	aabb1.max = { 0,0,0 };
+	aabb1.min = { -0.5f,-0.5f,-0.5f };
+
+	AABB aabb2;
+	aabb2.max = { 1,1,1 };
+	aabb2.min = { 0.2f,0.2f,0.2f };
+	uint32_t AABBColor = WHITE;
+
 
 	Vector3 v1{ 1.2f,-3.9f,2.5f };
 	Vector3 v2{ 2.8f,0.4f,-1.3f };
@@ -120,15 +129,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//DrawPlane(plane, worldViewProjectionMatrix, viewportMatrix, WHITE);
 		//DrawSphere(sphere, worldViewProjectionMatrix, viewportMatrix, color);
 
-		DrawTriangle(triangle, worldViewProjectionMatrix, viewportMatrix, WHITE);
+		//DrawTriangle(triangle, worldViewProjectionMatrix, viewportMatrix, WHITE);
+
+		DrawAABB(aabb1, worldViewProjectionMatrix, viewportMatrix, AABBColor);
+		DrawAABB(aabb2, worldViewProjectionMatrix, viewportMatrix, WHITE);
+
 
 		//線と平面の当たり判定
-		if (IsCollisionSeP(segment, plane)) {
+	/*	if (IsCollisionSeP(segment, plane)) {
 			Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), RED);
 		}
 		else {
 			Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), WHITE);
-		}
+		}*/
 
 		//球と平面の当たり判定
 		if (IsCollisionSpP(sphere, plane)) {
@@ -138,18 +151,26 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			color = WHITE;
 		}
 
-		if (IsCollisionTS(triangle, segment)) {
+		/*if (IsCollisionTS(triangle, segment)) {
 			Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), RED);
 		}
 		else {
 			Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), WHITE);
+		}*/
+
+		//AABBとAABBの当たり判定
+		if (IsCollisionAABB(aabb1, aabb2)) {
+			AABBColor = RED;
+		}
+		else {
+			AABBColor = WHITE;
 		}
 
 
 		ImGui::Begin("window");
 		ImGui::DragFloat3("CameraTranslate", &translate.x, 0.01f);
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
-		ImGui::DragFloat3("Line", &segment.origin.x, 0.01f);
+		ImGui::DragFloat3("AABB", &aabb1.max.x, 0.01f);
 		ImGui::DragFloat3("PlaneCenter", &plane.normal.x, 0.01f);
 
 		ImGui::End();

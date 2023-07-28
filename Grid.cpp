@@ -46,7 +46,7 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const 
 	for (int32_t index = 0; index < 4; ++index) {
 		Vector3 extend = Scaler(2.0f, perpendiculars[index]);
 		Vector3 point = Add(center, extend);
-		points[index] = Transform(Transform(point, viewProjectionMatrix), viewportMatrix);
+		points[index] = Transform(Transform(point, viewProjectionMatrix), viewportMatrix);//スクリーン座標に変換
 	}
 	Novice::DrawLine((int)points[0].x, (int)points[0].y, (int)points[2].x, (int)points[2].y, color);
 	Novice::DrawLine((int)points[0].x, (int)points[0].y, (int)points[3].x, (int)points[3].y, color);
@@ -54,7 +54,16 @@ void DrawPlane(const Plane& plane, const Matrix4x4& viewProjectionMatrix, const 
 	Novice::DrawLine((int)points[1].x, (int)points[1].y, (int)points[3].x, (int)points[3].y, color);
 
 }
-;
+void DrawTriangle(const Triangle& triangle, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color)
+{
+	Triangle point = triangle;
+
+	for (int32_t index = 0; index < 3; ++index) {
+		point.vertices[index] = Transform(Transform(triangle.vertices[index], viewProjectionMatrix), viewportMatrix);
+	}	
+
+	Novice::DrawTriangle((int)point.vertices[0].x, (int)point.vertices[0].y, (int)point.vertices[1].x, (int)point.vertices[1].y, (int)point.vertices[2].x, (int)point.vertices[2].y,WHITE, kFillModeWireFrame);
+};
 
 void DrawGrid(const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix)
 {

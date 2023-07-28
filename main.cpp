@@ -34,7 +34,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Segment segment;
 	segment.origin = { 0,0,0 };
 	segment.diff = { 1,1,1 };
-	uint32_t color=WHITE;
+	uint32_t color = WHITE;
+
+	Triangle triangle;
+	triangle.vertices[0] = { 1,0,0 };
+	triangle.vertices[1] = { 0,1,0 };
+	triangle.vertices[2] = { 2,1,0 };
+
 
 	Vector3 v1{ 1.2f,-3.9f,2.5f };
 	Vector3 v2{ 2.8f,0.4f,-1.3f };
@@ -111,11 +117,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		DrawGrid(worldViewProjectionMatrix, viewportMatrix);
 
-		DrawPlane(plane, worldViewProjectionMatrix, viewportMatrix, WHITE);
+		//DrawPlane(plane, worldViewProjectionMatrix, viewportMatrix, WHITE);
 		//DrawSphere(sphere, worldViewProjectionMatrix, viewportMatrix, color);
-		// 
+
+		DrawTriangle(triangle, worldViewProjectionMatrix, viewportMatrix, WHITE);
+
 		//線と平面の当たり判定
-		if (IsCollisionSeP(segment,plane)) {
+		if (IsCollisionSeP(segment, plane)) {
 			Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), RED);
 		}
 		else {
@@ -129,6 +137,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		else {
 			color = WHITE;
 		}
+
+		if (IsCollisionTS(triangle, segment)) {
+			Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), RED);
+		}
+		else {
+			Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), WHITE);
+		}
+
 
 		ImGui::Begin("window");
 		ImGui::DragFloat3("CameraTranslate", &translate.x, 0.01f);

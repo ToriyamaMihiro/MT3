@@ -127,12 +127,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		DrawGrid(worldViewProjectionMatrix, viewportMatrix);
 
 		//DrawPlane(plane, worldViewProjectionMatrix, viewportMatrix, WHITE);
-		//DrawSphere(sphere, worldViewProjectionMatrix, viewportMatrix, color);
+		DrawSphere(sphere, worldViewProjectionMatrix, viewportMatrix, color);
 
 		//DrawTriangle(triangle, worldViewProjectionMatrix, viewportMatrix, WHITE);
 
 		DrawAABB(aabb1, worldViewProjectionMatrix, viewportMatrix, AABBColor);
-		DrawAABB(aabb2, worldViewProjectionMatrix, viewportMatrix, WHITE);
+		//DrawAABB(aabb2, worldViewProjectionMatrix, viewportMatrix, WHITE);
 
 
 		//線と平面の当たり判定
@@ -144,12 +144,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}*/
 
 		//球と平面の当たり判定
-		if (IsCollisionSpP(sphere, plane)) {
+		/*if (IsCollisionSpP(sphere, plane)) {
 			color = RED;
 		}
 		else {
 			color = WHITE;
+		}*/
+
+		//AABBと球の当たり判定
+		if (IsCollisionAABBS(aabb1, sphere)) {
+			AABBColor = RED;
 		}
+		else {
+			AABBColor = WHITE;
+		}
+
 
 		/*if (IsCollisionTS(triangle, segment)) {
 			Novice::DrawLine(int(start.x), int(start.y), int(end.x), int(end.y), RED);
@@ -159,18 +168,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}*/
 
 		//AABBとAABBの当たり判定
-		if (IsCollisionAABB(aabb1, aabb2)) {
-			AABBColor = RED;
-		}
-		else {
-			AABBColor = WHITE;
-		}
+		//if (IsCollisionAABB(aabb1, aabb2)) {
+		//	AABBColor = RED;
+		//}
+		//else {
+		//	AABBColor = WHITE;
+		//}
 
 
 		ImGui::Begin("window");
 		ImGui::DragFloat3("CameraTranslate", &translate.x, 0.01f);
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
 		ImGui::DragFloat3("AABB", &aabb1.max.x, 0.01f);
+		ImGui::DragFloat3("Sphere", &sphere.center.x, 0.01f);
 		ImGui::DragFloat3("PlaneCenter", &plane.normal.x, 0.01f);
 
 		ImGui::End();
